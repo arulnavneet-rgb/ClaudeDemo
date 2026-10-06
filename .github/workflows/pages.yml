@@ -1,5 +1,5 @@
-# Checks index.html on every push and pull request, then publishes it to
-# GitHub Pages on every push to main.
+# Checks both boards on every push and pull request, then publishes them to
+# GitHub Pages on every push to main: index.html at the root, v2/index.html at /v2/.
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions".
 name: Deploy to GitHub Pages
 
@@ -18,22 +18,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: index.html exists
-        run: test -f index.html
+      - name: Both boards exist
+        run: test -f index.html && test -f v2/index.html
 
       # The FormSubmit call is the only allowed network request
       - name: No external resources
         run: |
-          if grep -nE '(src|href)=["'\'']https?://' index.html | grep -v 'formsubmit\.co'; then
-            echo "::error file=index.html::External resource found (see lines above)"
+          if grep -nE '(src|href)=["'\'']https?://' index.html v2/index.html | grep -v 'formsubmit\.co'; then
+            echo "::error::External resource found (see lines above)"
             exit 1
           fi
 
       # Brief: no persistence, no alert/confirm, no !important
       - name: No banned APIs
         run: |
-          if grep -nE 'localStorage|sessionStorage|indexedDB|document\.cookie|alert\(|confirm\(|!important' index.html; then
-            echo "::error file=index.html::Banned API or !important found (see lines above)"
+          if grep -nE 'localStorage|sessionStorage|indexedDB|document\.cookie|alert\(|confirm\(|!important' index.html v2/index.html; then
+            echo "::error::Banned API or !important found (see lines above)"
             exit 1
           fi
 
@@ -54,11 +54,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Publish only the app, not repo docs
+      # Publish only the two boards, not repo docs
       - name: Stage site
         run: |
-          mkdir _site
+          mkdir -p _site/v2
           cp index.html _site/
+          cp v2/index.html _site/v2/
 
       - uses: actions/configure-pages@v5
 

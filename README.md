@@ -6,6 +6,8 @@ A Kanban board for tracking IT project management office (PMO) tasks at a fictit
 
 **Live demo:** https://arulnavneet-rgb.github.io/ClaudeDemo/
 
+**Redesign (v2):** https://arulnavneet-rgb.github.io/ClaudeDemo/v2/ has the same board with a new look and a due-date strip in the header that plots every open task against today. Its source is [`v2/index.html`](v2/index.html).
+
 ![IT PMO Kanban board](docs/screenshot.png)
 
 ## Features
@@ -61,7 +63,7 @@ const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/YOUR_EMAIL@example.com";
 
 ## Deployment
 
-[`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes `index.html` (only that file) to GitHub Pages on every push to `main`. You can also run it by hand from the Actions tab.
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes `index.html` to the site root and `v2/index.html` to `/v2/` (only those two files) on every push to `main`. You can also run it by hand from the Actions tab.
 
 One-time setup: in the repo, go to **Settings → Pages** and set **Source** to **GitHub Actions**.
 
