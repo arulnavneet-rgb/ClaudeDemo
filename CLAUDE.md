@@ -24,6 +24,10 @@ A demo/training IT PMO Kanban board for a fictitious bank. The whole app is the 
   `osascript -l JavaScript -e 'ObjC.import("Foundation"); new Function($.NSString.stringWithContentsOfFileEncodingError("app.js",4,null).js); "OK"'`
 - To test pure logic outside the page, `eval` the script with a stub `document` (`{getElementById(){return {}}}`), remove the trailing `init();`, and put the test code in the same `eval` string, since the `const`s stay scoped to that `eval`.
 
+## Deployment
+
+`.github/workflows/pages.yml` publishes `index.html` (only that file) to GitHub Pages on every push to `main`. The live URL is https://arulnavneet-rgb.github.io/ClaudeDemo/ and runs are listed at https://github.com/arulnavneet-rgb/ClaudeDemo/actions. The repo's Pages source must be set to "GitHub Actions". The Pages URL is served over https, so FormSubmit works there; it may not when the file is opened from `file://`.
+
 ## Architecture (inside the `<script>`)
 
 - **Config:** `FORMSUBMIT_ENDPOINT` is the first constant. It's the only place the notification email address is set. While it still contains `YOUR_EMAIL`, `notifyNewTask()` deliberately throws without sending anything, which shows the "email notification failed" warning toast.
