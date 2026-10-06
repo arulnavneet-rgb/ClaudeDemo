@@ -1,24 +1,53 @@
-# Publishes index.html to GitHub Pages on every push to main.
+# Checks index.html on every push and pull request, then publishes it to
+# GitHub Pages on every push to main.
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions".
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
 
 jobs:
-  deploy:
+  check:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: index.html exists
+        run: test -f index.html
+
+      # The FormSubmit call is the only allowed network request
+      - name: No external resources
+        run: |
+          if grep -nE '(src|href)=["'\'']https?://' index.html | grep -v 'formsubmit\.co'; then
+            echo "::error file=index.html::External resource found (see lines above)"
+            exit 1
+          fi
+
+      # Brief: no persistence, no alert/confirm, no !important
+      - name: No banned APIs
+        run: |
+          if grep -nE 'localStorage|sessionStorage|indexedDB|document\.cookie|alert\(|confirm\(|!important' index.html; then
+            echo "::error file=index.html::Banned API or !important found (see lines above)"
+            exit 1
+          fi
+
+  deploy:
+    needs: check
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

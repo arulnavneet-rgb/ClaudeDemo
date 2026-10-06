@@ -1,0 +1,7 @@
+.playwright-mcp/
+.DS_Store
+.env*
+*.pem
+*.key
+.claude/settings.local.json
+node_modules/

@@ -26,7 +26,7 @@ A demo/training IT PMO Kanban board for a fictitious bank. The whole app is the 
 
 ## Deployment
 
-`.github/workflows/pages.yml` publishes `index.html` (only that file) to GitHub Pages on every push to `main`. The live URL is https://arulnavneet-rgb.github.io/ClaudeDemo/ and runs are listed at https://github.com/arulnavneet-rgb/ClaudeDemo/actions. The repo's Pages source must be set to "GitHub Actions". The Pages URL is served over https, so FormSubmit works there; it may not when the file is opened from `file://`.
+`.github/workflows/pages.yml` publishes `index.html` (only that file) to GitHub Pages on every push to `main`. A `check` job runs first on every push and pull request, and fails if `index.html` references external resources (other than FormSubmit) or uses browser storage, `alert(`, `confirm(` or `!important`. The live URL is https://arulnavneet-rgb.github.io/ClaudeDemo/ and runs are listed at https://github.com/arulnavneet-rgb/ClaudeDemo/actions. The repo's Pages source must be set to "GitHub Actions". The Pages URL is served over https, so FormSubmit works there; it may not when the file is opened from `file://`.
 
 ## Architecture (inside the `<script>`)
 
